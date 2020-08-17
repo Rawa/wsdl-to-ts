@@ -9,12 +9,12 @@ import { IInterfaceOptions, ITypedWsdl, mergeTypedWsdl, outputTypedWsdl, wsdl2ts
 interface IConfigObject {
     outdir: string;
     files: string[];
-    tslintDisable: null | string[];
-    tslintEnable: null | string[];
+    eslintDisable: null | string[];
+    eslintEnable: null | string[];
 }
 
 const opts: IInterfaceOptions = {};
-const config: IConfigObject = { outdir: "./wsdl", files: [], tslintDisable: ["max-line-length", "no-empty-interface"], tslintEnable: [] };
+const config: IConfigObject = { outdir: "./wsdl", files: [], eslintDisable: ["max-line-length", "no-empty-interface"], eslintEnable: [] };
 let soapOptions = {};
 
 const args = minimist(process.argv.slice(2));
@@ -31,18 +31,18 @@ if (args.version) {
     throw new Error("Exited");
 }
 
-if (args.hasOwnProperty("tslint")) {
-    if (args.tslint === "true") {
-        config.tslintEnable = null;
-    } else if (args.tslint === "false" || args.tslint === "disable") {
-        config.tslintDisable = null;
+if (args.hasOwnProperty("eslint")) {
+    if (args.eslint === "true") {
+        config.eslintEnable = null;
+    } else if (args.eslint === "false" || args.eslint === "disable") {
+        config.eslintDisable = null;
     } else {
-        config.tslintEnable = args.tslint ? args.tslint.split(",") : null;
+        config.eslintEnable = args.eslint ? args.eslint.split(",") : null;
     }
 }
 
-if (args.hasOwnProperty("tslint-disable")) {
-    config.tslintDisable = args["tslint-disable"] ? args["tslint-disable"].split(",") : null;
+if (args.hasOwnProperty("eslint-disable")) {
+    config.eslintDisable = args["eslint-disable"] ? args["eslint-disable"].split(",") : null;
 }
 
 if (args.outdir || args.outDir) {
@@ -102,16 +102,16 @@ Promise.all(config.files.map((a) => wsdl2ts(a, soapOptions, opts))).
                 return new Promise((resolve, reject) => {
                     const tsfile = file + ".ts.tmp";
                     const fileData: string[] = [];
-                    if (config.tslintEnable === null) {
-                        fileData.push("/* tslint:enable */");
+                    if (config.eslintEnable === null) {
+                        fileData.push("/* eslint-enable */");
                     }
-                    if (config.tslintDisable === null) {
-                        fileData.push("/* eslint disable */");
-                    } else if (config.tslintDisable.length !== 0) {
-                        fileData.push("/* eslint disable " + config.tslintDisable.join(" ") + " */");
+                    if (config.eslintDisable === null) {
+                        fileData.push("/* eslint-disable */");
+                    } else if (config.eslintDisable.length !== 0) {
+                        fileData.push("/* eslint-disable " + config.eslintDisable.join(",") + " */");
                     }
-                    if (config.tslintEnable && config.tslintEnable.length !== 0) {
-                        fileData.push("/* eslint enable " + config.tslintEnable.join(" ") + " */");
+                    if (config.eslintEnable && config.eslintEnable.length !== 0) {
+                        fileData.push("/* eslint-enable " + config.eslintEnable.join(",") + " */");
                     }
                     fileData.push(x.data.join("\n\n"));
                     fileData.push("");
