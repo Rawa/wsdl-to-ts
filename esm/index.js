@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 "use strict";
-import { rename, writeFile } from "fs";
+import { rename, writeFile, readFileSync } from "fs";
 import * as minimist from "minimist";
 import * as mkdirp from "mkdirp";
 import { mergeTypedWsdl, outputTypedWsdl, wsdl2ts } from "./wsdl-to-ts";
 const opts = {};
 const config = { outdir: "./wsdl", files: [], tslintDisable: ["max-line-length", "no-empty-interface"], tslintEnable: [] };
+let soapOptions = {};
 const args = minimist(process.argv.slice(2));
 if (args.help) {
     // TODO
@@ -42,6 +43,15 @@ if (args.hasOwnProperty("quote")) {
         opts.quoteProperties = true;
     }
 }
+if (args.hasOwnProperty("cert") && args.hasOwnProperty("cert_password")) {
+    const cert = readFileSync(args.cert);
+    soapOptions = {
+        wsdl_options: {
+            pfx: cert,
+            passphrase: args.cert_password
+        }
+    };
+}
 if (args._) {
     config.files.push.apply(config.files, args._);
 }
@@ -62,7 +72,7 @@ function mkdirpp(dir, mode) {
         });
     });
 }
-Promise.all(config.files.map((a) => wsdl2ts(a, opts))).
+Promise.all(config.files.map((a) => wsdl2ts(a, soapOptions, opts))).
     then((xs) => mergeTypedWsdl.apply(undefined, xs)).
     then(outputTypedWsdl).
     then((xs) => {

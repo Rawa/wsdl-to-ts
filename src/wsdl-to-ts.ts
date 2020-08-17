@@ -171,9 +171,9 @@ function wsdlTypeToInterface(obj: { [k: string]: any }, typeCollector?: TypeColl
     return wsdlTypeToInterfaceString(wsdlTypeToInterfaceObj(obj, typeCollector), opts);
 }
 
-export function wsdl2ts(wsdlUri: string, opts?: IInterfaceOptions): Promise<ITypedWsdl> {
+export function wsdl2ts(wsdlUri: string, soapOptions: soap.IOptions = {}, opts?: IInterfaceOptions): Promise<ITypedWsdl> {
     return new Promise<soap.Client>((resolve, reject) => {
-        soap.createClient(wsdlUri, {}, (err, client) => {
+        soap.createClient(wsdlUri, soapOptions, (err, client) => {
             if (err) {
                 reject(err);
             } else {

@@ -36,7 +36,7 @@ export declare class TypeCollector {
     constructor(ns: string);
     registerCollected(): this;
 }
-export declare function wsdl2ts(wsdlUri: string, opts?: IInterfaceOptions): Promise<ITypedWsdl>;
+export declare function wsdl2ts(wsdlUri: string, soapOptions?: soap.IOptions, opts?: IInterfaceOptions): Promise<ITypedWsdl>;
 export declare function mergeTypedWsdl(a: ITypedWsdl, ...bs: ITypedWsdl[]): ITypedWsdl;
 export declare function outputTypedWsdl(a: ITypedWsdl): Array<{
     file: string;

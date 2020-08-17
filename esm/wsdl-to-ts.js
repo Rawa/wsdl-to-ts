@@ -150,9 +150,9 @@ function wsdlTypeToInterfaceString(d, opts = {}) {
 function wsdlTypeToInterface(obj, typeCollector, opts) {
     return wsdlTypeToInterfaceString(wsdlTypeToInterfaceObj(obj, typeCollector), opts);
 }
-export function wsdl2ts(wsdlUri, opts) {
+export function wsdl2ts(wsdlUri, soapOptions = {}, opts) {
     return new Promise((resolve, reject) => {
-        soap.createClient(wsdlUri, {}, (err, client) => {
+        soap.createClient(wsdlUri, soapOptions, (err, client) => {
             if (err) {
                 reject(err);
             }
