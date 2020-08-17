@@ -106,12 +106,12 @@ Promise.all(config.files.map((a) => wsdl2ts(a, soapOptions, opts))).
                         fileData.push("/* tslint:enable */");
                     }
                     if (config.tslintDisable === null) {
-                        fileData.push("/* tslint:disable */");
+                        fileData.push("/* eslint disable */");
                     } else if (config.tslintDisable.length !== 0) {
-                        fileData.push("/* tslint:disable:" + config.tslintDisable.join(" ") + " */");
+                        fileData.push("/* eslint disable " + config.tslintDisable.join(" ") + " */");
                     }
                     if (config.tslintEnable && config.tslintEnable.length !== 0) {
-                        fileData.push("/* tslint:enable:" + config.tslintEnable.join(" ") + " */");
+                        fileData.push("/* eslint enable " + config.tslintEnable.join(" ") + " */");
                     }
                     fileData.push(x.data.join("\n\n"));
                     fileData.push("");
